@@ -12,6 +12,7 @@ def monitor_cpu():
     try:
         while True:
             cpu_usage = psutil.cpu_percent(interval=1)
+            print("CPU Usage : ", cpu_usage)
 
             if cpu_usage > CPU_THRESHOLD:
                 print(f"Alert! CPU usage exceeds threshold: {cpu_usage:.2f}%")
