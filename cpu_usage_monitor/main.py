@@ -2,6 +2,9 @@ import psutil
 import time
 import sys
 
+# To test the cpu usage alert working, use commad: `timeout 60s dd if=/dev/zero of=/dev/null &` stress up CPU.
+
+
 # Configuration
 CPU_THRESHOLD = 80.0
 CHECK_INTERVAL = 1
