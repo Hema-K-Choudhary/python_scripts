@@ -10,6 +10,10 @@ DB_FILE = "./config_data.db"
 app = Flask(__name__)
 
 def parse_config(file_path):
+    print("reading config from the file..")
+
+
+    # using config parser to read contents of .ini config file.
     config = configparser.ConfigParser()
     parsed_data = {}
 
@@ -24,16 +28,13 @@ def parse_config(file_path):
     return parsed_data
 
 def save_to_db(data, db_path):
+    print("saving config to DB..")
+    
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     # Create table if not exists
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS config (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            data TEXT
-        )
-    """)
+    cursor.execute("CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT)")
 
     # Clear previous data
     cursor.execute("DELETE FROM config")
@@ -44,6 +45,8 @@ def save_to_db(data, db_path):
     conn.close()
 
 def load_from_db(db_path):
+    print("Loading config details from DB..")
+    
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
@@ -65,13 +68,12 @@ def get_config():
 
 if __name__ == "__main__":
     try:
-        print("Parsing configuration...")
         parsed_config = parse_config(CONFIG_FILE)
-        print("Saving parsed data to database...")
         save_to_db(parsed_config, DB_FILE)
-        print("Starting API server...")
         app.run(debug=True)
-    except FileNotFoundError as fnf_err:
-        print(fnf_err)
+
+    except FileNotFoundError as err:
+        print(err)
+
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Exception: {e}")
