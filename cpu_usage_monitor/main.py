@@ -2,26 +2,34 @@ import psutil
 import time
 import sys
 
-# Threshold percentage
+# Configuration
 CPU_THRESHOLD = 80.0
-# Time interval between checks (in seconds)
 CHECK_INTERVAL = 1
 
+def get_cpu_usage():
+    """Get current CPU usage percentage."""
+    return psutil.cpu_percent(interval=1)
+
+def check_alert(cpu_usage):
+    """Check if CPU usage is too high."""
+    if cpu_usage > CPU_THRESHOLD:
+        print(f"ALERT! CPU usage too high: {cpu_usage:.1f}%")
+
 def monitor_cpu():
-    print("Monitoring CPU usage... (Press Ctrl+C to stop)")
+    """Monitor CPU usage continuously."""
+    print("Monitoring CPU... (Press Ctrl+C to stop)")
+    
     try:
         while True:
-            cpu_usage = psutil.cpu_percent(interval=1)
-            print("CPU Usage : ", cpu_usage)
-
-            if cpu_usage > CPU_THRESHOLD:
-                print(f"Alert! CPU usage exceeds threshold: {cpu_usage:.2f}%")
-
+            cpu_usage = get_cpu_usage()
+            print(f"CPU Usage: {cpu_usage:.1f}%")
+            check_alert(cpu_usage)
             time.sleep(CHECK_INTERVAL)
+            
     except KeyboardInterrupt:
-        print("\nMonitoring stopped by user.")
+        print("\nStopped monitoring.")
     except Exception as e:
-        print(f"An error occurred during CPU monitoring: {e}")
+        print(f"Error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
